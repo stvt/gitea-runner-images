@@ -1,0 +1,20 @@
+ARG BASE_IMAGE_TAG
+
+FROM gitea/runner-images:${BASE_IMAGE_TAG}
+
+ARG IMAGE_CREATED
+ARG IMAGE_VERSION
+ARG IMAGE_REVISION
+ARG IMAGE_LABEL_OWNER
+
+LABEL org.opencontainers.image.created="${IMAGE_CREATED}" \
+      org.opencontainers.image.authors="Gitea" \
+      org.opencontainers.image.url="https://github.com/stvt/gitea-runner-images" \
+      org.opencontainers.image.documentation="https://github.com/stvt/gitea-runner-images/src/branch/main/README.md" \
+      org.opencontainers.image.source="https://github.com/stvt/gitea-runner-images" \
+      org.opencontainers.image.version="${IMAGE_VERSION}" \
+      org.opencontainers.image.revision="${IMAGE_REVISION}" \
+      org.opencontainers.image.vendor="${IMAGE_LABEL_OWNER}" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.title="Gitea Actions runner images for an on-premise environment" \
+      org.opencontainers.image.description="Based on the official docker images used by act_runner to run workflows, upgraded with a local root CA certificate."

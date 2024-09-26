@@ -1,0 +1,155 @@
+name: release
+
+on:
+  schedule:
+    - cron: 0 0 1 * *
+  push:
+    branches:
+      - main
+
+env:
+  IMAGE_LABEL_OWNER: ${{ github.repository_owner }}
+  IMAGE_LABEL_REPO: ${{ github.repository }}
+  BUILD_REF: ${{ github.sha }}
+  SKIP_TEST: false
+  PUSH_GHCR: ${{ github.repository == (github.event.pull_request.head.repo.full_name || github.repository) && '1' || '' }}
+  PUSH_DOCKER_HUB: ${{ secrets.DOCKER_USER && secrets.DOCKER_TOKEN && '1' || '' }}
+
+jobs:
+  release-default:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker BuildX
+        uses: docker/setup-buildx-action@v3
+        with:
+          buildkitd-flags: --debug
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Get Meta
+        id: meta
+        run: |
+          echo IMAGE_CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ') | tee -a $GITHUB_ENV
+          echo IMAGE_VERSION=$(date -u +'v%y.%m.%d') | tee -a $GITHUB_ENV
+          echo IMAGE_REVISION=$(git rev-parse HEAD) | tee -a $GITHUB_ENV
+
+      - name: Build and push default 22.04
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          platforms: |
+            linux/amd64
+            linux/arm64
+          pull: true
+          push: true
+          no-cache: true
+          build-args: |
+            BASE_IMAGE_TAG=ubuntu-22.04
+            IMAGE_VERSION=${{ steps.meta.outputs.IMAGE_VERSION }}
+            IMAGE_CREATED=${{ steps.meta.outputs.IMAGE_CREATED }}
+            IMAGE_REVISION=${{ steps.meta.outputs.IMAGE_REVISION }}
+            IMAGE_LABEL_OWNER=${{ env.IMAGE_LABEL_OWNER }}
+          tags: |
+            stvoigt/gitea-runner-images:ubuntu-22.04
+            stvoigt/gitea-runner-images:ubuntu-22.04-${{ steps.meta.outputs.IMAGE_VERSION }}
+            stvoigt/gitea-runner-images:ubuntu-latest
+
+      - name: Build and push default 20.04
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: dockerfiles/ubuntu.dockerfile
+          platforms: |
+            linux/amd64
+            linux/arm64
+          pull: true
+          push: true
+          no-cache: true
+          build-args: |
+            BASE_IMAGE_TAG=ubuntu-20.04
+            IMAGE_VERSION=${{ steps.meta.outputs.IMAGE_VERSION }}
+            IMAGE_CREATED=${{ steps.meta.outputs.IMAGE_CREATED }}
+            IMAGE_REVISION=${{ steps.meta.outputs.IMAGE_REVISION }}
+          tags: |
+            stvoigt/gitea-runner-images:ubuntu-20.04
+            stvoigt/gitea-runner-images:ubuntu-20.04-${{ steps.meta.outputs.IMAGE_VERSION }}
+
+  release-slim:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker BuildX
+        uses: docker/setup-buildx-action@v3
+        with:
+          buildkitd-flags: --debug
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Get Meta
+        id: meta
+        run: |
+          echo IMAGE_CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ') | tee -a $GITHUB_ENV
+          echo IMAGE_VERSION=$(date -u +'v%y.%m.%d') | tee -a $GITHUB_ENV
+          echo IMAGE_REVISION=$(git rev-parse HEAD) | tee -a $GITHUB_ENV
+
+      - name: Build and push slim 22.04
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: dockerfiles/ubuntu-slim.dockerfile
+          platforms: |
+            linux/amd64
+            linux/arm64
+          pull: true
+          push: true
+          no-cache: true
+          build-args: |
+            BASE_IMAGE_TAG=20-bookworm-slim
+            IMAGE_VERSION=${{ steps.meta.outputs.IMAGE_VERSION }}
+            IMAGE_CREATED=${{ steps.meta.outputs.IMAGE_CREATED }}
+            IMAGE_REVISION=${{ steps.meta.outputs.IMAGE_REVISION }}
+          tags: |
+            stvoigt/gitea-runner-images:ubuntu-22.04-slim
+            stvoigt/gitea-runner-images:ubuntu-22.04-slim-${{ steps.meta.outputs.IMAGE_VERSION }}
+            stvoigt/gitea-runner-images:ubuntu-latest-slim
+
+      - name: Build and push slim 20.04
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: dockerfiles/ubuntu-slim.dockerfile
+          platforms: |
+            linux/amd64
+            linux/arm64
+          pull: true
+          push: true
+          no-cache: true
+          build-args: |
+            BASE_IMAGE_TAG=20-bullseye-slim
+            IMAGE_VERSION=${{ steps.meta.outputs.IMAGE_VERSION }}
+            IMAGE_CREATED=${{ steps.meta.outputs.IMAGE_CREATED }}
+            IMAGE_REVISION=${{ steps.meta.outputs.IMAGE_REVISION }}
+            IMAGE_LABEL_OWNER=${{ env.IMAGE_LABEL_OWNER }}
+          tags: |
+            stvoigt/gitea-runner-images:ubuntu-20.04-slim
+            stvoigt/gitea-runner-images:ubuntu-20.04-slim-${{ steps.meta.outputs.IMAGE_VERSION }}
