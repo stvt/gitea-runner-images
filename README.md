@@ -9,8 +9,8 @@ See [gitea/runner-images](https://github.com/stvt/gitea-runner-images.git) and [
 
 ## Image build process
 
-Images are built from `gitea/runner-images:*`. An then the root CA certificate is injected.
+Images are built from `gitea/runner-images:*`. And then the root CA certificate is injected.
 
-As of 2024-09 only "default" type of image is built.
+As of 2024-09 only "default" and "slim" types of images are built.
 
-Maybe "slim" and "full" are added in the future.
+Maybe "full" is added in the future.
