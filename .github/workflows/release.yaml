@@ -118,7 +118,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: buildcontext
-          file: buildcontext/Dockerfile
+          file: buildcontext/Dockerfile.slim
           platforms: |
             linux/amd64
             linux/arm64
@@ -140,7 +140,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: buildcontext
-          file: buildcontext/Dockerfile
+          file: buildcontext/Dockerfile.slim
           platforms: |
             linux/amd64
             linux/arm64
