@@ -82,6 +82,7 @@ jobs:
             IMAGE_VERSION=${{ steps.meta.outputs.IMAGE_VERSION }}
             IMAGE_CREATED=${{ steps.meta.outputs.IMAGE_CREATED }}
             IMAGE_REVISION=${{ steps.meta.outputs.IMAGE_REVISION }}
+            IMAGE_LABEL_OWNER=${{ env.IMAGE_LABEL_OWNER }}
           tags: |
             stvoigt/gitea-runner-images:ubuntu-20.04
             stvoigt/gitea-runner-images:ubuntu-20.04-${{ steps.meta.outputs.IMAGE_VERSION }}
@@ -109,9 +110,9 @@ jobs:
       - name: Get Meta
         id: meta
         run: |
-          echo IMAGE_CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ') | tee -a $GITHUB_ENV
-          echo IMAGE_VERSION=$(date -u +'v%y.%m.%d') | tee -a $GITHUB_ENV
-          echo IMAGE_REVISION=$(git rev-parse HEAD) | tee -a $GITHUB_ENV
+          echo "IMAGE_CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" | tee -a "$GITHUB_ENV"
+          echo "IMAGE_VERSION=$(date -u +'v%y.%m.%d')" | tee -a "$GITHUB_ENV"
+          echo "IMAGE_REVISION=$(git rev-parse HEAD)" | tee -a "$GITHUB_ENV"
 
       - name: Build and push slim 22.04
         uses: docker/build-push-action@v6
@@ -129,6 +130,7 @@ jobs:
             IMAGE_VERSION=${{ steps.meta.outputs.IMAGE_VERSION }}
             IMAGE_CREATED=${{ steps.meta.outputs.IMAGE_CREATED }}
             IMAGE_REVISION=${{ steps.meta.outputs.IMAGE_REVISION }}
+            IMAGE_LABEL_OWNER=${{ env.IMAGE_LABEL_OWNER }}
           tags: |
             stvoigt/gitea-runner-images:ubuntu-22.04-slim
             stvoigt/gitea-runner-images:ubuntu-22.04-slim-${{ steps.meta.outputs.IMAGE_VERSION }}
