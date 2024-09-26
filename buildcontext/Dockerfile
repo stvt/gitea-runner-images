@@ -21,4 +21,4 @@ LABEL org.opencontainers.image.created="${IMAGE_CREATED}" \
 
 COPY root_ca.crt /usr/local/share/ca-certificates/
 
-RUN update-ca-certificates
+RUN apt-get install -y update-ca-certificates; update-ca-certificates
