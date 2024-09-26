@@ -8,7 +8,7 @@ ARG IMAGE_REVISION
 ARG IMAGE_LABEL_OWNER
 
 LABEL org.opencontainers.image.created="${IMAGE_CREATED}" \
-      org.opencontainers.image.authors="Gitea" \
+      org.opencontainers.image.authors="${IMAGE_LABEL_OWNER}" \
       org.opencontainers.image.url="https://github.com/stvt/gitea-runner-images" \
       org.opencontainers.image.documentation="https://github.com/stvt/gitea-runner-images/src/branch/main/README.md" \
       org.opencontainers.image.source="https://github.com/stvt/gitea-runner-images" \
