@@ -40,9 +40,9 @@ jobs:
       - name: Get Meta
         id: meta
         run: |
-          echo "IMAGE_CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" | tee -a "$GITHUB_ENV"
-          echo "IMAGE_VERSION=$(date -u +'v%y.%m.%d')" | tee -a "$GITHUB_ENV"
-          echo "IMAGE_REVISION=$(git rev-parse HEAD)" | tee -a "$GITHUB_ENV"
+          echo "IMAGE_CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" | tee -a "$GITHUB_OUTPUT"
+          echo "IMAGE_VERSION=$(date -u +'v%y.%m.%d')" | tee -a "$GITHUB_OUTPUT"
+          echo "IMAGE_REVISION=$(git rev-parse HEAD)" | tee -a "$GITHUB_OUTPUT"
 
       - name: Build and push default 22.04
         uses: docker/build-push-action@v6
@@ -110,9 +110,9 @@ jobs:
       - name: Get Meta
         id: meta
         run: |
-          echo "IMAGE_CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" | tee -a "$GITHUB_ENV"
-          echo "IMAGE_VERSION=$(date -u +'v%y.%m.%d')" | tee -a "$GITHUB_ENV"
-          echo "IMAGE_REVISION=$(git rev-parse HEAD)" | tee -a "$GITHUB_ENV"
+          echo "IMAGE_CREATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" | tee -a "$GITHUB_OUTPUT"
+          echo "IMAGE_VERSION=$(date -u +'v%y.%m.%d')" | tee -a "$GITHUB_OUTPUT"
+          echo "IMAGE_REVISION=$(git rev-parse HEAD)" | tee -a "$GITHUB_OUTPUT"
 
       - name: Build and push slim 22.04
         uses: docker/build-push-action@v6
