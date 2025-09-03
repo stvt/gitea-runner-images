@@ -5,7 +5,7 @@ You can find the images on [stvoigt/gitea-runner-images](https://hub.docker.com/
 
 This image is based on gitea's Official docker images that are used by [act_runner](https://gitea.com/gitea/act_runner) to run workflows.
 
-See [gitea/runner-images](https://github.com/stvt/gitea-runner-images.git) and [catthehacker/docker_images](https://github.com/catthehacker/docker_images) to find out more about those projects.
+See [gitea/runner-images](https://gitea.com/gitea/runner-images) and [catthehacker/docker_images](https://github.com/catthehacker/docker_images) to find out more about those projects.
 
 ## Image build process
 
